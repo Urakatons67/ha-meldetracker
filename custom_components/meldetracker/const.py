@@ -1,5 +1,5 @@
 DOMAIN = "meldetracker"
-VERSION = "2.1.0"
+VERSION = "2.1.1"
 URL_BASE = "/meldetracker_static"
 PANEL_PATH = "melden"
 PANEL_ELEMENT = "meldetracker-panel"

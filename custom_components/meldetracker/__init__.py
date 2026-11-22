@@ -468,7 +468,7 @@ def ws_save_parents(hass: HomeAssistant, connection, msg) -> None:
 @websocket_api.websocket_command(
     {
         vol.Required("type"): f"{DOMAIN}/profile/save",
-        vol.Optional("id"): vol.Any(None, cv.string),
+        vol.Optional("profile_id"): vol.Any(None, cv.string),
         vol.Required("name"): vol.All(cv.string, vol.Length(min=1, max=30)),
         vol.Optional("user_id"): vol.Any(None, cv.string),
         vol.Optional("copy_subjects_from"): vol.Any(None, cv.string),
@@ -477,14 +477,17 @@ def ws_save_parents(hass: HomeAssistant, connection, msg) -> None:
 @websocket_api.require_admin
 @callback
 def ws_save_profile(hass: HomeAssistant, connection, msg) -> None:
-    """Profil anlegen (ohne id) oder umbenennen/Benutzer zuordnen (mit id)."""
+    """Profil anlegen (ohne profile_id) oder umbenennen/Benutzer zuordnen (mit profile_id).
+
+    Achtung: "id" ist bei HA-WebSocket die Nachrichtennummer, daher profile_id.
+    """
     store = hass.data.get(DOMAIN)
     if store is None:
         connection.send_error(msg["id"], "not_loaded", "Melde-Tracker ist nicht eingerichtet")
         return
     profiles = store.data["profiles"]
     uid = msg.get("user_id") or None
-    pid = msg.get("id")
+    pid = msg.get("profile_id")
     if uid and any(p.get("user_id") == uid for k, p in profiles.items() if k != pid):
         connection.send_error(msg["id"], "user_taken", "Dieser Benutzer hat schon ein Profil")
         return
@@ -505,11 +508,11 @@ def ws_save_profile(hass: HomeAssistant, connection, msg) -> None:
             prof["periods"] = src.get("periods", 8)
         profiles[pid] = prof
     store.save()
-    connection.send_result(msg["id"], {"id": pid})
+    connection.send_result(msg["id"], {"profile_id": pid})
 
 
 @websocket_api.websocket_command(
-    {vol.Required("type"): f"{DOMAIN}/profile/delete", vol.Required("id"): cv.string,
+    {vol.Required("type"): f"{DOMAIN}/profile/delete", vol.Required("profile_id"): cv.string,
      vol.Required("confirm_name"): cv.string}
 )
 @websocket_api.require_admin
@@ -520,7 +523,7 @@ def ws_delete_profile(hass: HomeAssistant, connection, msg) -> None:
     if store is None:
         connection.send_error(msg["id"], "not_loaded", "Melde-Tracker ist nicht eingerichtet")
         return
-    prof = store.data["profiles"].get(msg["id"])
+    prof = store.data["profiles"].get(msg["profile_id"])
     if prof is None:
         connection.send_error(msg["id"], "not_found", "Profil nicht gefunden")
         return
@@ -530,6 +533,6 @@ def ws_delete_profile(hass: HomeAssistant, connection, msg) -> None:
     if len(store.data["profiles"]) <= 1:
         connection.send_error(msg["id"], "last", "Das letzte Profil kann nicht gelöscht werden")
         return
-    del store.data["profiles"][msg["id"]]
+    del store.data["profiles"][msg["profile_id"]]
     store.save()
     connection.send_result(msg["id"], {"ok": True})

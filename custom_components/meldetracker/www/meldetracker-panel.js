@@ -171,7 +171,7 @@ class MeldetrackerPanel extends HTMLElement {
         const p = this._profDraft[i];
         if (!(p.name || "").trim()) { this._toast("Bitte einen Namen eingeben"); return; }
         try {
-          await this._hass.callWS({ type: "meldetracker/profile/save", id: p.id, name: p.name.trim(), user_id: p.user_id || null });
+          await this._hass.callWS({ type: "meldetracker/profile/save", profile_id: p.id, name: p.name.trim(), user_id: p.user_id || null });
           this._toast("Profil gespeichert ✓");
           await this._load();
         } catch (err) { this._toast("Fehler: " + (err.message || err)); }
@@ -182,7 +182,7 @@ class MeldetrackerPanel extends HTMLElement {
         if (!(n.name || "").trim()) { this._toast("Bitte einen Namen eingeben"); return; }
         try {
           const r = await this._hass.callWS({ type: "meldetracker/profile/save", name: n.name.trim(), user_id: n.user_id || null, copy_subjects_from: n.copy || null });
-          this._profile = r.id;
+          this._profile = r.profile_id;
           this._toast("Profil angelegt ✓");
           await this._load();
         } catch (err) { this._toast("Fehler: " + (err.message || err)); }
@@ -194,7 +194,7 @@ class MeldetrackerPanel extends HTMLElement {
         const typed = prompt(`Zur Bestätigung den Namen „${p.name}“ eintippen:`);
         if (typed == null) return;
         try {
-          await this._hass.callWS({ type: "meldetracker/profile/delete", id: p.id, confirm_name: typed });
+          await this._hass.callWS({ type: "meldetracker/profile/delete", profile_id: p.id, confirm_name: typed });
           if (this._profile === p.id) this._profile = null;
           this._toast("Profil gelöscht");
           await this._load();
