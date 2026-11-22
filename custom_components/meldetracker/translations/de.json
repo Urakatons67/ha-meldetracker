@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Melde-Tracker",
+        "description": "Legt die Seite „Melden“ in der Seitenleiste an. Profile (eins je Kind), Fächer und Stundenplan werden dort eingestellt."
+      }
+    },
+    "abort": {
+      "already_configured": "Der Melde-Tracker ist bereits eingerichtet."
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "domain": "meldetracker",
+  "name": "Melde-Tracker",
+  "codeowners": ["@Urakatons67"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http", "panel_custom", "websocket_api"],
+  "documentation": "https://github.com/Urakatons67/ha-meldetracker",
+  "integration_type": "service",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/Urakatons67/ha-meldetracker/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "2.1.0"
+}

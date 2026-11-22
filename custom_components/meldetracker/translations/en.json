@@ -1,0 +1,13 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Melde-Tracker",
+        "description": "Adds the page \"Melden\" to the sidebar. Profiles (one per child), subjects and timetable are configured there. The user interface is in German."
+      }
+    },
+    "abort": {
+      "already_configured": "Melde-Tracker is already configured."
+    }
+  }
+}
